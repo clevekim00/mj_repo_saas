@@ -156,6 +156,13 @@ function createCard(repository, showDetails = false) {
     card.append(languages);
   }
   if (repository.commits.length) card.append(commitChart(repository.commits));
+  if (repository.platform === 'GitHub') {
+    const graph = element('details', 'graphify-disclosure');
+    graph.append(element('summary', '', '프로젝트 흐름 · 상세'));
+    window.graphifyUI.appendRepositoryGraph(graph, repository.url, () => tokenInput.value.trim());
+    card.append(graph);
+  }
+
   if (showDetails) {
     const button = element('button', 'details-button', '상세 통계 불러오기');
     button.type = 'button';
