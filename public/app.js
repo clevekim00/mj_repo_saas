@@ -5,6 +5,9 @@ const tokenGuide = document.querySelector('#token-guide');
 const status = document.querySelector('#status');
 const repositories = document.querySelector('#repositories');
 const cards = new Map();
+const savedGitHubCards = new Map();
+const githubCardsKey = 'repository-dashboard:github-cards:v1';
+const { appendRepositoryGraph, readLocal, saveLocal } = window.graphifyUI;
 const number = new Intl.NumberFormat('ko-KR');
 const date = new Intl.DateTimeFormat('ko-KR', { timeZone: 'UTC', dateStyle: 'medium' });
 
@@ -159,7 +162,7 @@ function createCard(repository, showDetails = false) {
   if (repository.platform === 'GitHub') {
     const graph = element('details', 'graphify-disclosure');
     graph.append(element('summary', '', '프로젝트 흐름 · 상세'));
-    window.graphifyUI.appendRepositoryGraph(graph, repository.url, () => tokenInput.value.trim());
+    appendRepositoryGraph(graph, repository.url, () => tokenInput.value.trim());
     card.append(graph);
   }
 
@@ -178,7 +181,9 @@ function createCard(repository, showDetails = false) {
         if (details.url !== repository.url) {
           card.remove();
           cards.delete(repository.url);
+          savedGitHubCards.delete(repository.url);
         }
+        if (!saveGitHubCards()) status.textContent = '브라우저에 저장할 수 없어 이번 페이지에서만 변경 내용을 유지합니다.';
         cards.get(details.url).querySelector('h2 a').focus();
       } catch (error) {
         detailStatus.textContent = lookupError(error);
@@ -211,7 +216,12 @@ function upsertCard(repository, showDetails = false) {
   if (existing) existing.replaceWith(card);
   else repositories.prepend(card);
   cards.set(repository.url, card);
+  if (repository.platform === 'GitHub') savedGitHubCards.set(repository.url, { repository, showDetails });
   return Boolean(existing);
+}
+
+function saveGitHubCards() {
+  return saveLocal(githubCardsKey, [...savedGitHubCards.values()]);
 }
 
 function lookupError(error) {
@@ -238,6 +248,9 @@ form.addEventListener('submit', async (event) => {
       const existing = upsertCard(result);
       status.textContent = existing ? '저장소를 갱신했습니다.' : '저장소를 추가했습니다.';
     }
+    if ((result.repositories || result.platform === 'GitHub') && !saveGitHubCards()) {
+      status.textContent += ' 브라우저에 저장할 수 없어 이번 페이지에서만 카드를 유지합니다.';
+    }
     if (input.value.trim() === url) input.value = '';
   } catch (error) {
     status.textContent = lookupError(error);
@@ -245,3 +258,8 @@ form.addEventListener('submit', async (event) => {
     submit.disabled = false;
   }
 });
+
+const restoredCards = readLocal(githubCardsKey, []);
+if (Array.isArray(restoredCards)) {
+  for (const { repository, showDetails } of restoredCards) upsertCard(repository, showDetails);
+}
