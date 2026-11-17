@@ -2,11 +2,17 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
+import { generateRepositoryGraph, GraphifyError } from './graphify.mjs';
 
 const assets = new Map([
   ['/', ['index.html', 'text/html; charset=utf-8']],
   ['/app.js', ['app.js', 'text/javascript; charset=utf-8']],
   ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
+  ['/atlas/', ['atlas/index.html', 'text/html; charset=utf-8']],
+  ['/atlas/style.css', ['atlas/style.css', 'text/css; charset=utf-8']],
+  ['/atlas/app.js', ['atlas/app.js', 'text/javascript; charset=utf-8']],
+  ['/atlas/projects.js', ['atlas/projects.js', 'text/javascript; charset=utf-8']],
+  ['/atlas/github-import.js', ['atlas/github-import.js', 'text/javascript; charset=utf-8']],
 ]);
 
 const weekSeconds = 7 * 24 * 60 * 60;
@@ -30,6 +36,7 @@ function repositoryLocation(input) {
 export function createApp(fetchUpstream = fetch, retryDelay = 1500) {
   const cache = new Map();
   const pending = new Map();
+  let activeGraphs = 0;
 
   function github(path, token) {
     const headers = { Accept: 'application/vnd.github+json' };
@@ -252,8 +259,41 @@ export function createApp(fetchUpstream = fetch, retryDelay = 1500) {
   return createServer(async (request, response) => {
     try {
       const url = new URL(request.url, 'http://localhost');
+      if (url.pathname === '/api/graphify') {
+        response.setHeader('Cache-Control', 'no-store');
+        const reply = (status, body) => response.writeHead(status, {
+          'Content-Type': 'application/json; charset=utf-8',
+        }).end(JSON.stringify(body));
+        if (request.method !== 'POST') {
+          response.writeHead(405, { Allow: 'POST' }).end();
+          return;
+        }
+        if (request.headers['x-atlas-graphify'] !== '1' || request.headers['sec-fetch-site'] === 'cross-site') {
+          return reply(403, { message: '아틀라스 페이지에서 그래프를 요청해 주세요.' });
+        }
+        const location = repositoryLocation(url.searchParams.get('url'));
+        if (location?.host !== 'github.com' || !location.path) {
+          return reply(400, { message: '개별 GitHub 저장소 주소가 필요해요.' });
+        }
+        if (activeGraphs >= 2) return reply(429, { message: '다른 그래프를 생성 중이에요. 잠시 뒤 다시 시도해 주세요.' });
+        const token = /^Bearer (\S+)$/i.exec(request.headers.authorization ?? '')?.[1];
+        activeGraphs++;
+        try {
+          return reply(200, await generateRepositoryGraph(location.path, token, fetchUpstream));
+        } catch (error) {
+          return reply(error instanceof GraphifyError ? error.status : 502, {
+            message: error instanceof GraphifyError ? error.message : '그래프를 생성하지 못했어요. 잠시 뒤 다시 시도해 주세요.',
+          });
+        } finally {
+          activeGraphs--;
+        }
+      }
       if (request.method !== 'GET') {
         response.writeHead(405, { Allow: 'GET' }).end();
+        return;
+      }
+      if (url.pathname === '/atlas') {
+        response.writeHead(308, { Location: '/atlas/' }).end();
         return;
       }
       if (url.pathname === '/api/repository') {

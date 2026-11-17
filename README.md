@@ -8,7 +8,12 @@
 
 ## 로컬 실행
 
-Node.js 20 이상에서 `node server.mjs`를 실행한 뒤 [http://127.0.0.1:9090](http://127.0.0.1:9090)을 엽니다.
+Node.js 20 이상에서 `node server.mjs`를 실행합니다.
+
+- [프로젝트 아틀라스](http://127.0.0.1:9090/atlas/)에서 `mj_repo_saas` 카드를 찾고 **프로젝트 흐름 · 상세 → 확대 보기**를 열면 Graphify 그래프를 볼 수 있습니다. 아틀라스의 GitHub 가져오기는 브라우저에서 GitHub API에 연결합니다.
+- 다른 GitHub 저장소를 가져온 뒤 **프로젝트 흐름 · 상세**를 펼치면 저장된 그래프를 열거나 로컬 Graphify CLI로 생성합니다. 서버를 실행하는 환경의 PATH에 `graphify`가 필요합니다. 기본 브랜치에서 지원되는 코드 파일을 최대 24개 분석하며, 초과하면 일부만 표시합니다.
+- 가져온 카드와 생성한 그래프는 이 브라우저의 로컬 저장소에 저장됩니다. 비공개 저장소도 포함됩니다. 토큰은 열린 페이지에서만 사용합니다. 다시 연 페이지에서 비공개 그래프를 새로 생성하려면 **Contents: Read-only** 권한이 있는 토큰으로 해당 저장소를 다시 가져오세요.
+- [저장소 통계 조회](http://127.0.0.1:9090/)에서 아래 방법으로 저장소를 추가할 수 있습니다.
 
 - `https://github.com/clevekim00`처럼 GitHub 프로필 주소를 입력하면 해당 계정이 소유한 공개 저장소 목록을 불러옵니다. 카드의 **상세 통계 불러오기**를 누르면 주간 커밋, Watch 수, 사용 언어 비율을 조회합니다.
 - 비공개 GitHub 저장소를 보려면 **GitHub 토큰 (선택)**에 접근 권한이 있는 [fine-grained personal access token](https://github.com/settings/personal-access-tokens/new)을 입력하세요. 조회할 저장소에 **Metadata: Read-only** 권한을 부여하고, 커밋 통계를 보려면 **Contents: Read-only**도 부여하세요. 토큰은 입력란에만 유지되며 앱이 따로 저장하지 않습니다.
@@ -26,5 +31,6 @@ Node.js 20 이상에서 `node server.mjs`를 실행한 뒤 [http://127.0.0.1:909
 ## 문서
 
 - [제품 기획서](docs/PRODUCT_PLAN.md): 대상 사용자, MVP, 데이터 근거, 개인정보 보호, 검증 기준과 로드맵
+- [Graphify 코드 구조 파일럿](docs/GRAPHIFY_PILOT.md): 로컬 재실행 방법, 확인한 연결과 한계
 
 자동 갱신은 초기 검증 이후 검토합니다.

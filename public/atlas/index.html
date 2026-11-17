@@ -1,0 +1,104 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="개인 프로젝트의 목적, 흐름, 출시와 버전을 한곳에서."><title>내 프로젝트 대시보드</title><link rel="stylesheet" href="style.css"><script defer src="projects.js"></script><script defer src="app.js"></script><script defer src="github-import.js"></script></head><body>
+<header><div class="wrap topline"><span><b class="mark" aria-hidden="true">▦</b> PROJECT ATLAS</span><span class="private">개인 워크스페이스</span></div></header>
+<main class="wrap"><section class="hero"><div class="eyebrow">WORKSPACE / OVERVIEW</div><h1>내 프로젝트 대시보드</h1><p>무엇을 만들고 있고, 어디까지 왔는지 한눈에.</p><div class="stats" id="stats"></div></section>
+<section aria-labelledby="project-title"><div class="section-title"><h2 id="project-title">프로젝트</h2><small>2026.11.14 기준 · 수동 정리</small></div><div class="toolbar"><label>프로젝트 검색<input type="search" placeholder="이름, 목적, 키워드" id="query"></label><label>출시 상태<select id="filter"><option value="">전체</option><option>공개 확인</option><option>기획</option><option>미확인</option></select></label><button class="atlas-button" id="github-open" type="button" aria-haspopup="dialog">GitHub 가져오기</button></div>
+<p class="hint">공개 저장소와 제품 출시는 별개예요. 확인되지 않은 버전이나 출시는 따로 표시했어요.</p><p id="results" class="sr" role="status"></p><div class="grid" id="cards"></div><noscript>이 대시보드를 보려면 JavaScript를 켜 주세요.</noscript></section></main><footer class="wrap">PROJECT ATLAS <span>프로젝트 상세는 각 카드에서 펼칠 수 있어요.</span></footer><dialog id="github-dialog" aria-labelledby="github-title">
+  <form id="github-form">
+    <h2 id="github-title">GitHub 저장소 가져오기</h2>
+    <label for="github-url">GitHub 프로필 또는 저장소 주소</label>
+    <input id="github-url" type="url" placeholder="https://github.com/owner" required autofocus>
+    <label for="github-token">GitHub 토큰 (선택)</label>
+    <input id="github-token" type="password" autocomplete="off" spellcheck="false" aria-describedby="github-token-hint">
+    <p id="github-token-hint" class="hint">공개 저장소는 토큰 없이 가져올 수 있어요. 비공개 저장소는 읽기 권한이 있는 토큰이 필요해요.</p>
+    <details><summary>토큰 발급 안내</summary>
+      <ol>
+        <li><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">GitHub에서 Fine-grained personal access token 발급</a>을 열어요.</li>
+        <li>저장소의 소유 계정과 가져올 저장소를 선택하고 <strong>Metadata: Read-only</strong>를 확인해요.</li>
+        <li><strong>Generate token</strong>을 누르고 표시된 토큰을 이 창에 붙여넣어요.</li>
+      </ol>
+    </details>
+    <p id="github-feedback" class="hint" role="status"></p>
+    <div class="dialog-actions"><button class="atlas-button secondary" id="github-close" type="button">닫기</button><button class="atlas-button" type="submit">가져오기</button></div>
+  </form>
+</dialog><template id="graphify-template">
+<section id="graphify-inline">
+<h4>Graphify 코드 그래프</h4>
+<p class="text-muted">노드 21개 · 연결 25개 · 그룹 3개</p>
+<label class="form-label">연결 확인
+<select class="form-select"><option value="">전체 노드</option>
+<option value="0">app.js</option>
+<option value="1">form</option>
+<option value="2">input</option>
+<option value="3">tokenInput</option>
+<option value="4">tokenGuide</option>
+<option value="5">status</option>
+<option value="6">repositories</option>
+<option value="7">cards</option>
+<option value="8">number</option>
+<option value="9">date</option>
+<option value="10">element()</option>
+<option value="11">commitChart()</option>
+<option value="12">projectFields()</option>
+<option value="13">createCard()</option>
+<option value="14">fetchRepository()</option>
+<option value="15">upsertCard()</option>
+<option value="16">lookupError()</option>
+<option value="17">server.mjs</option>
+<option value="18">assets</option>
+<option value="19">repositoryLocation()</option>
+<option value="20">createApp()</option>
+</select></label>
+<p class="text-small">실선은 함수 호출, 점선은 파일에 포함된 항목</p>
+<svg viewBox="0 0 330 652" role="img" aria-label="app.js와 server.mjs에서 추출한 코드 노드와 연결">
+<defs><marker id="graphify-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8Z" fill="var(--graph-call)"/></marker></defs>
+<path data-edge="0 7" class="contains" d="M165,39 C165,184.0 55,184.0 55,329"/>
+<path data-edge="0 11" class="contains" d="M165,39 C165,115.5 271,115.5 271,192"/>
+<path data-edge="0 13" class="contains" d="M165,39 C165,75.5 233,75.5 233,112"/>
+<path data-edge="0 9" class="contains" d="M165,39 C165,223.0 55,223.0 55,407"/>
+<path data-edge="0 10" class="contains" d="M165,39 C165,154.5 264,154.5 264,270"/>
+<path data-edge="0 14" class="contains" d="M165,39 C165,242.5 55,242.5 55,446"/>
+<path data-edge="0 1" class="contains" d="M165,39 C165,67.0 55,67.0 55,95"/>
+<path data-edge="0 2" class="contains" d="M165,39 C165,86.5 55,86.5 55,134"/>
+<path data-edge="0 16" class="contains" d="M165,39 C165,262.0 55,262.0 55,485"/>
+<path data-edge="0 8" class="contains" d="M165,39 C165,203.5 55,203.5 55,368"/>
+<path data-edge="0 12" class="contains" d="M165,39 C165,115.5 166,115.5 166,192"/>
+<path data-edge="0 6" class="contains" d="M165,39 C165,164.5 55,164.5 55,290"/>
+<path data-edge="0 5" class="contains" d="M165,39 C165,145.0 55,145.0 55,251"/>
+<path data-edge="0 4" class="contains" d="M165,39 C165,125.5 55,125.5 55,212"/>
+<path data-edge="0 3" class="contains" d="M165,39 C165,106.0 55,106.0 55,173"/>
+<path data-edge="0 15" class="contains" d="M165,39 C165,50.5 233,50.5 233,62"/>
+<path data-edge="11 10" class="calls" d="M271,205 C271,237.5 264,237.5 264,270"/>
+<path data-edge="13 10" class="calls" d="M233,125 C233,197.5 264,197.5 264,270"/>
+<path data-edge="12 10" class="calls" d="M166,205 C166,237.5 264,237.5 264,270"/>
+<path data-edge="13 11" class="calls" d="M233,125 C233,158.5 271,158.5 271,192"/>
+<path data-edge="13 12" class="calls" d="M233,125 C233,158.5 166,158.5 166,192"/>
+<path data-edge="15 13" class="calls" d="M233,75 C233,93.5 233,93.5 233,112"/>
+<path data-edge="17 18" class="contains" d="M165,565 C165,588.5 49,588.5 49,612"/>
+<path data-edge="17 20" class="contains" d="M165,565 C165,588.5 278,588.5 278,612"/>
+<path data-edge="17 19" class="contains" d="M165,565 C165,588.5 167,588.5 167,612"/>
+<g data-node="0" class="group-0"><title>app.js · public/app.js L1</title><rect x="134.0" y="27" width="62" height="24" rx="6"/><text x="165" y="39" text-anchor="middle" dominant-baseline="central">app.js</text></g>
+<g data-node="1" class="group-0"><title>form · public/app.js L1</title><rect x="24.0" y="96" width="62" height="24" rx="6"/><text x="55" y="108" text-anchor="middle" dominant-baseline="central">form</text></g>
+<g data-node="2" class="group-0"><title>input · public/app.js L2</title><rect x="24.0" y="135" width="62" height="24" rx="6"/><text x="55" y="147" text-anchor="middle" dominant-baseline="central">input</text></g>
+<g data-node="3" class="group-0"><title>tokenInput · public/app.js L3</title><rect x="18.5" y="174" width="73.0" height="24" rx="6"/><text x="55" y="186" text-anchor="middle" dominant-baseline="central">tokenInput</text></g>
+<g data-node="4" class="group-0"><title>tokenGuide · public/app.js L4</title><rect x="18.5" y="213" width="73.0" height="24" rx="6"/><text x="55" y="225" text-anchor="middle" dominant-baseline="central">tokenGuide</text></g>
+<g data-node="5" class="group-0"><title>status · public/app.js L5</title><rect x="24.0" y="252" width="62" height="24" rx="6"/><text x="55" y="264" text-anchor="middle" dominant-baseline="central">status</text></g>
+<g data-node="6" class="group-0"><title>repositories · public/app.js L6</title><rect x="12.400000000000006" y="291" width="85.19999999999999" height="24" rx="6"/><text x="55" y="303" text-anchor="middle" dominant-baseline="central">repositories</text></g>
+<g data-node="7" class="group-0"><title>cards · public/app.js L7</title><rect x="24.0" y="330" width="62" height="24" rx="6"/><text x="55" y="342" text-anchor="middle" dominant-baseline="central">cards</text></g>
+<g data-node="8" class="group-0"><title>number · public/app.js L8</title><rect x="24.0" y="369" width="62" height="24" rx="6"/><text x="55" y="381" text-anchor="middle" dominant-baseline="central">number</text></g>
+<g data-node="9" class="group-0"><title>date · public/app.js L9</title><rect x="24.0" y="408" width="62" height="24" rx="6"/><text x="55" y="420" text-anchor="middle" dominant-baseline="central">date</text></g>
+<g data-node="10" class="group-1"><title>element() · public/app.js L13</title><rect x="230.55" y="271" width="66.9" height="24" rx="6"/><text x="264" y="283" text-anchor="middle" dominant-baseline="central">element()</text></g>
+<g data-node="11" class="group-1"><title>commitChart() · public/app.js L20</title><rect x="225.35" y="193" width="91.3" height="24" rx="6"/><text x="271" y="205" text-anchor="middle" dominant-baseline="central">commitChart()</text></g>
+<g data-node="12" class="group-1"><title>projectFields() · public/app.js L57</title><rect x="114.25" y="193" width="103.5" height="24" rx="6"/><text x="166" y="205" text-anchor="middle" dominant-baseline="central">projectFields()</text></g>
+<g data-node="13" class="group-1"><title>createCard() · public/app.js L123</title><rect x="190.4" y="113" width="85.19999999999999" height="24" rx="6"/><text x="233" y="125" text-anchor="middle" dominant-baseline="central">createCard()</text></g>
+<g data-node="14" class="group-0"><title>fetchRepository() · public/app.js L188</title><rect x="-2.8499999999999943" y="447" width="115.69999999999999" height="24" rx="6"/><text x="55" y="459" text-anchor="middle" dominant-baseline="central">fetchRepository()</text></g>
+<g data-node="15" class="group-1"><title>upsertCard() · public/app.js L200</title><rect x="190.4" y="63" width="85.19999999999999" height="24" rx="6"/><text x="233" y="75" text-anchor="middle" dominant-baseline="central">upsertCard()</text></g>
+<g data-node="16" class="group-0"><title>lookupError() · public/app.js L210</title><rect x="9.350000000000001" y="486" width="91.3" height="24" rx="6"/><text x="55" y="498" text-anchor="middle" dominant-baseline="central">lookupError()</text></g>
+<g data-node="17" class="group-2"><title>server.mjs · server.mjs L1</title><rect x="128.5" y="553" width="73.0" height="24" rx="6"/><text x="165" y="565" text-anchor="middle" dominant-baseline="central">server.mjs</text></g>
+<g data-node="18" class="group-2"><title>assets · server.mjs L6</title><rect x="18.0" y="613" width="62" height="24" rx="6"/><text x="49" y="625" text-anchor="middle" dominant-baseline="central">assets</text></g>
+<g data-node="19" class="group-2"><title>repositoryLocation() · server.mjs L14</title><rect x="100.0" y="613" width="134.0" height="24" rx="6"/><text x="167" y="625" text-anchor="middle" dominant-baseline="central">repositoryLocation()</text></g>
+<g data-node="20" class="group-2"><title>createApp() · server.mjs L30</title><rect x="238.45" y="613" width="79.1" height="24" rx="6"/><text x="278" y="625" text-anchor="middle" dominant-baseline="central">createApp()</text></g>
+</svg>
+</section>
+
+</template>
+</body></html>
