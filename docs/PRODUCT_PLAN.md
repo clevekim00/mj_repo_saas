@@ -1,5 +1,7 @@
 # mj_repo_saas 제품 기획서
 
+[한국어](PRODUCT_PLAN.md) · [English](en/PRODUCT_PLAN.md) · [日本語](ja/PRODUCT_PLAN.md) · [Español](es/PRODUCT_PLAN.md) · [简体中文](zh-CN/PRODUCT_PLAN.md)
+
 상태: 초안 · 2026-11-14
 
 ## 제품 가설

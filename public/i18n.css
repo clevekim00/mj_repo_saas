@@ -1,0 +1,21 @@
+.language-picker {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .5rem;
+  margin: .75rem 0;
+  font: inherit;
+  font-weight: 400;
+}
+.language-picker select {
+  flex: 0 1 auto;
+  width: auto;
+  min-height: 40px;
+  max-width: 100%;
+  padding: .4rem .6rem;
+  border: 1px solid #8a9b90;
+  border-radius: .5rem;
+  background: #fff;
+  color: #18271f;
+  font: inherit;
+}

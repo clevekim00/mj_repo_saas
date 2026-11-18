@@ -8,8 +8,8 @@ const cards = new Map();
 const savedGitHubCards = new Map();
 const githubCardsKey = 'repository-dashboard:github-cards:v1';
 const { appendRepositoryGraph, readLocal, saveLocal } = window.graphifyUI;
-const number = new Intl.NumberFormat('ko-KR');
-const date = new Intl.DateTimeFormat('ko-KR', { timeZone: 'UTC', dateStyle: 'medium' });
+const number = new Intl.NumberFormat(window.dashboardI18n.locale);
+const date = new Intl.DateTimeFormat(window.dashboardI18n.locale, { timeZone: 'UTC', dateStyle: 'medium' });
 
 document.querySelector('#open-token-guide').addEventListener('click', () => tokenGuide.showModal());
 
@@ -17,6 +17,7 @@ function element(tag, className, content) {
   const node = document.createElement(tag);
   if (className) node.className = className;
   if (content !== undefined) node.textContent = content;
+  if (['description', 'project-purpose'].includes(className)) node.dataset.noI18n = '';
   return node;
 }
 
@@ -128,6 +129,7 @@ function createCard(repository, showDetails = false) {
   const title = element('h2');
   const link = element('a', '', repository.name);
   link.href = repository.url;
+  link.dataset.noI18n = '';
   title.append(link);
   const platform = repository.private ? `${repository.platform} · 비공개` : repository.platform;
   card.append(element('p', 'platform', platform), title);

@@ -1,5 +1,7 @@
 # Graphify 코드 구조 파일럿
 
+[한국어](GRAPHIFY_PILOT.md) · [English](en/GRAPHIFY_PILOT.md) · [日本語](ja/GRAPHIFY_PILOT.md) · [Español](es/GRAPHIFY_PILOT.md) · [简体中文](zh-CN/GRAPHIFY_PILOT.md)
+
 공개 커밋 [`365ab5b`](https://github.com/clevekim00/mj_repo_saas/commit/365ab5bef0fbe41c57785892b44ab5f9601bf52c)의 `public/app.js`, `server.mjs` 두 파일만 분석합니다. 현재 작업 중인 파일, 문서, 비공개 저장소나 토큰은 분석하지 않습니다. [Graphify 공식 문서](https://github.com/Graphify-Labs/graphify)에서 설치 방법을 확인할 수 있습니다. 파일럿에서는 이미 설치된 CLI `0.8.43`으로 검증했습니다.
 
 ```sh
